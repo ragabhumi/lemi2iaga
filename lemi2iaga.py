@@ -66,7 +66,7 @@ try:
             Bf[index] = np.sqrt((Bx[index]**2)+(By[index]**2)+(Bz[index]**2))
 
 except IOError:
-    print "Input file is not exist\nUsage: lemi2iaga <namafileinput>"
+    print "Input file does not exist\nUsage: lemi2iaga <namafileinput>"
     print "\nlemi2iaga - LEMI-018 to IAGA-2002 converter, Version 0.0.1"
     print "(c) 2015-2016 Yosi Setiawan"
     quit()
