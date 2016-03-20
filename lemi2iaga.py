@@ -39,13 +39,22 @@ z_mean=np.zeros(1440)
 f_mean=np.zeros(1440)
 
 try:
-	script, filename = argv
+    script, filename = argv
 except ValueError:
     print "Usage: lemi2iaga <namafileinput>"
     print "\nlemi2iaga - LEMI-018 to IAGA-2002 converter, Version 0.0.1"
     print "(c) 2015-2016 Yosi Setiawan"
     quit()
-	
+
+#Initialization
+with open('lemi2iaga.ini') as f_ini:
+    init = f_ini.readlines()
+    staname_init = re.split('=|\n',init[0])
+    stacode_init = re.split('=|\n',init[1])
+    lat_init = re.split('=|\n',init[2])
+    lon_init = re.split('=|\n',init[3])
+    elev_init = re.split('=|\n',init[4])
+
 #Import data Lemi   
 namafile = filename
 try:
@@ -70,8 +79,8 @@ except IOError:
     print "\nlemi2iaga - LEMI-018 to IAGA-2002 converter, Version 0.0.1"
     print "(c) 2015-2016 Yosi Setiawan"
     quit()
-	    
-#Create 24 hour data
+    
+#Membuat waktu selama 24 jam interval 1 detik
 tahun = np.tile(yyyy,86400)
 bulan = np.tile(mo,86400)
 tanggal = np.tile(dd,86400)
@@ -81,7 +90,7 @@ detik = np.tile(range(0,60),1440)
 
 date1 = datetime(year=yyyy,month=mo,day=dd,hour=0,minute=0,second=0)
 
-#Calculate minute means
+#Hitung rata-rata satu menit
 for k in range(0,1440):
     if np.count_nonzero(np.isnan(Bx[(0+(60*k)):((60+(60*k)))])) <= 6:
         x_mean[k]=np.nanmean(Bx[(0+(60*k)):((60+(60*k)))])
@@ -100,17 +109,17 @@ for k in range(0,1440):
     else:
         f_mean[k]=99999.00
 
-#Write output file
-fileout = 'TUN'+str(yyyy)+str(mo).zfill(2)+str(dd).zfill(2)+'vmin'+'.min'
+#Menyimpan file output
+fileout = stacode_init[1]+str(yyyy)+str(mo).zfill(2)+str(dd).zfill(2)+'vmin'+'.min'
 f_iaga = open(fileout, 'w')
 
 f_iaga.write(' Format                 IAGA-2002                                    |\n')
 f_iaga.write(' Source of Data         BMKG                                         |\n')
-f_iaga.write(' Station Name           Tuntungan                                    |\n')
-f_iaga.write(' IAGA Code              TUN                                          |\n')
-f_iaga.write(' Geodetic Latitude      3.517                                        |\n')
-f_iaga.write(' Geodetic Longitude     98.567                                       |\n')
-f_iaga.write(' Elevation              86                                           |\n')
+f_iaga.write(' Station Name           %s                                    |\n' %staname_init[1])
+f_iaga.write(' IAGA Code              %s                                          |\n' %stacode_init[1])
+f_iaga.write(' Geodetic Latitude      %s                                        |\n' %lat_init[1])
+f_iaga.write(' Geodetic Longitude     %s                                       |\n' %lon_init[1])
+f_iaga.write(' Elevation              %s                                           |\n' %elev_init[1])
 f_iaga.write(' Reported               XYZF                                         |\n')
 f_iaga.write(' Sensor Orientation     XYZ                                          |\n')
 f_iaga.write(' Digital Sampling       1 second                                     |\n')
