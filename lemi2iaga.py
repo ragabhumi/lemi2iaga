@@ -1,3 +1,4 @@
+#! c:\Python27\python.exe
 from __future__ import with_statement
 # -*- coding: utf-8 -*-
 """
@@ -49,11 +50,35 @@ except ValueError:
 #Initialization
 with open('lemi2iaga.ini') as f_ini:
     init = f_ini.readlines()
-    staname_init = re.split('=|\n',init[0])
-    stacode_init = re.split('=|\n',init[1])
-    lat_init = re.split('=|\n',init[2])
-    lon_init = re.split('=|\n',init[3])
-    elev_init = re.split('=|\n',init[4])
+    staname_init=list(np.tile(' ',45))
+    staname_a = list(re.split('=|\n',init[0]))
+    staname_a = staname_a[1]
+    for q in range(0,len(staname_a)): staname_init[q]=staname_a[q]
+    staname = ''.join(staname_init)
+    
+    stacode_init=list(np.tile(' ',45))
+    stacode_a = list(re.split('=|\n',init[1]))
+    stacode_a = stacode_a[1]
+    for q in range(0,len(stacode_a)): stacode_init[q]=stacode_a[q]
+    stacode = ''.join(stacode_init)
+    
+    lat_init=list(np.tile(' ',45))
+    lat_a = list(re.split('=|\n',init[2]))
+    lat_a = lat_a[1]
+    for q in range(0,len(lat_a)): lat_init[q]=lat_a[q]
+    lat = ''.join(lat_init)
+    
+    lon_init=list(np.tile(' ',45))
+    lon_a = list(re.split('=|\n',init[3]))
+    lon_a = lon_a[1]
+    for q in range(0,len(lon_a)): lon_init[q]=lon_a[q]
+    lon = ''.join(lon_init)
+    
+    elev_init=list(np.tile(' ',45))
+    elev_a = list(re.split('=|\n',init[4]))
+    elev_a = elev_a[1]
+    for q in range(0,len(elev_a)): elev_init[q]=elev_a[q]
+    elev = ''.join(elev_init)
 
 #Import data Lemi   
 namafile = filename
@@ -110,16 +135,16 @@ for k in range(0,1440):
         f_mean[k]=99999.00
 
 #Menyimpan file output
-fileout = stacode_init[1]+str(yyyy)+str(mo).zfill(2)+str(dd).zfill(2)+'vmin'+'.min'
+fileout = stacode[0:3]+str(yyyy)+str(mo).zfill(2)+str(dd).zfill(2)+'vmin'+'.min'
 f_iaga = open(fileout, 'w')
 
 f_iaga.write(' Format                 IAGA-2002                                    |\n')
 f_iaga.write(' Source of Data         BMKG                                         |\n')
-f_iaga.write(' Station Name           %s                                    |\n' %staname_init[1])
-f_iaga.write(' IAGA Code              %s                                          |\n' %stacode_init[1])
-f_iaga.write(' Geodetic Latitude      %s                                        |\n' %lat_init[1])
-f_iaga.write(' Geodetic Longitude     %s                                       |\n' %lon_init[1])
-f_iaga.write(' Elevation              %s                                           |\n' %elev_init[1])
+f_iaga.write(' Station Name           %s|\n' %staname)
+f_iaga.write(' IAGA Code              %s|\n' %stacode)
+f_iaga.write(' Geodetic Latitude      %s|\n' %lat)
+f_iaga.write(' Geodetic Longitude     %s|\n' %lon)
+f_iaga.write(' Elevation              %s|\n' %elev)
 f_iaga.write(' Reported               XYZF                                         |\n')
 f_iaga.write(' Sensor Orientation     XYZ                                          |\n')
 f_iaga.write(' Digital Sampling       1 second                                     |\n')
