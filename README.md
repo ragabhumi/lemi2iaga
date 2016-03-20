@@ -6,6 +6,7 @@ Python script to convert LEMI-018 text file to IAGA-2002 format
 - numpy-1.9.2
 
 #How to Run?
-lemi2iaga \<inputfile\>
-
+```
+lemi2iaga <inputfile>
+```
 Edit lemi2iaga.ini to change station.
