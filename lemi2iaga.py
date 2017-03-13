@@ -158,7 +158,7 @@ f_iaga.write(' Data Type              variation                                 
 f_iaga.write('DATE       TIME         DOY     %sH      %sD      %sZ      %sF   |\n' %(stacode[0:3],stacode[0:3],stacode[0:3],stacode[0:3]))
 
 for j in range(0,1440):
-    body_iaga = '%s     %8.2f  %8.2f  %8.2f  %8.2f\n' %((date1+timedelta(minutes=j)).strftime("%Y-%m-%d %H:%M:%S.000 %j"),h_mean[j],d_mean[j],z_mean[j],f_mean[j])
+    body_iaga = '%s    %9.2f %9.2f %9.2f %9.2f\n' %((date1+timedelta(minutes=j)).strftime("%Y-%m-%d %H:%M:%S.000 %j"),h_mean[j],d_mean[j],z_mean[j],88888)
     f_iaga.write(body_iaga)
 f_iaga.close()
 
