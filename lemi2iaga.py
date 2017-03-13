@@ -34,10 +34,14 @@ Bx = list(np.tile(np.nan,86400))
 By = list(np.tile(np.nan,86400))
 Bz = list(np.tile(np.nan,86400))
 Bf = list(np.tile(np.nan,86400))
+Bh = list(np.tile(np.nan,86400))
+Bd = list(np.tile(np.nan,86400))
 x_mean=np.zeros(1440)
 y_mean=np.zeros(1440)
 z_mean=np.zeros(1440)
 f_mean=np.zeros(1440)
+h_mean=np.zeros(1440)
+d_mean=np.zeros(1440)
 
 try:
     script, filename = argv
@@ -98,6 +102,8 @@ try:
             By[index] = float(data[7])
             Bz[index] = float(data[8])
             Bf[index] = np.sqrt((Bx[index]**2)+(By[index]**2)+(Bz[index]**2))
+            Bh[index] = np.sqrt((Bx[index]**2)+(By[index]**2))
+            Bd[index] = 60 * np.degrees(np.arcsin(By[index] / Bh[index]))
 
 except IOError:
     print "Input file does not exist\nUsage: lemi2iaga <namafileinput>"
@@ -115,16 +121,15 @@ detik = np.tile(range(0,60),1440)
 
 date1 = datetime(year=yyyy,month=mo,day=dd,hour=0,minute=0,second=0)
 
-#Hitung rata-rata satu menit
 for k in range(0,1440):
-    if np.count_nonzero(np.isnan(Bx[(0+(60*k)):((60+(60*k)))])) <= 6:
-        x_mean[k]=np.nanmean(Bx[(0+(60*k)):((60+(60*k)))])
+    if np.count_nonzero(np.isnan(Bh[(0+(60*k)):((60+(60*k)))])) <= 6:
+        h_mean[k]=np.nanmean(Bh[(0+(60*k)):((60+(60*k)))])
     else:
-        x_mean[k]=99999.00
-    if np.count_nonzero(np.isnan(By[(0+(60*k)):((60+(60*k)))])) <= 6:
-        y_mean[k]=np.nanmean(By[(0+(60*k)):((60+(60*k)))])
+        h_mean[k]=99999.00
+    if np.count_nonzero(np.isnan(Bd[(0+(60*k)):((60+(60*k)))])) <= 6:
+        d_mean[k]=np.nanmean(Bd[(0+(60*k)):((60+(60*k)))])
     else:
-        y_mean[k]=99999.00
+        d_mean[k]=99999.00
     if np.count_nonzero(np.isnan(Bz[(0+(60*k)):((60+(60*k)))])) <= 6:
         z_mean[k]=np.nanmean(Bz[(0+(60*k)):((60+(60*k)))])
     else:
@@ -135,7 +140,7 @@ for k in range(0,1440):
         f_mean[k]=99999.00
 
 #Menyimpan file output
-fileout = stacode[0:3]+str(yyyy)+str(mo).zfill(2)+str(dd).zfill(2)+'vmin'+'.min'
+fileout = stacode[0:3]+str(yyyy)+str(mo).zfill(2)+str(dd).zfill(2)+'pmin'+'.min'
 f_iaga = open(fileout, 'w')
 
 f_iaga.write(' Format                 IAGA-2002                                    |\n')
@@ -145,17 +150,16 @@ f_iaga.write(' IAGA Code              %s|\n' %stacode)
 f_iaga.write(' Geodetic Latitude      %s|\n' %lat)
 f_iaga.write(' Geodetic Longitude     %s|\n' %lon)
 f_iaga.write(' Elevation              %s|\n' %elev)
-f_iaga.write(' Reported               XYZF                                         |\n')
+f_iaga.write(' Reported               HDZF                                         |\n')
 f_iaga.write(' Sensor Orientation     XYZ                                          |\n')
 f_iaga.write(' Digital Sampling       1 second                                     |\n')
 f_iaga.write(' Data Interval Type     Filtered 1-minute (00:15-01:45)              |\n')
 f_iaga.write(' Data Type              variation                                    |\n')
-f_iaga.write('DATE       TIME         DOY     TUNX      TUNY      TUNZ      TUNF   |\n')
+f_iaga.write('DATE       TIME         DOY     %sH      %sD      %sZ      %sF   |\n' %(stacode[0:3],stacode[0:3],stacode[0:3],stacode[0:3]))
 
 for j in range(0,1440):
-    body_iaga = '%s     %8.2f  %8.2f  %8.2f  %8.2f\n' %((date1+timedelta(minutes=j)).strftime("%Y-%m-%d %H:%M:%S.000 %j"),x_mean[j],y_mean[j],z_mean[j],f_mean[j])
+    body_iaga = '%s     %8.2f  %8.2f  %8.2f  %8.2f\n' %((date1+timedelta(minutes=j)).strftime("%Y-%m-%d %H:%M:%S.000 %j"),h_mean[j],d_mean[j],z_mean[j],f_mean[j])
     f_iaga.write(body_iaga)
-f_iaga.write(' ')
 f_iaga.close()
 
 print '%s converted to %s' %(filename,fileout)
