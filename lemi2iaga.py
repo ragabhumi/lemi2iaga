@@ -3,23 +3,8 @@ from __future__ import with_statement
 # -*- coding: utf-8 -*-
 """
 Created on Thu Mar 17 21:47:44 2016
-
 @author: YOSI
 """
-
-def clear_all():
-    """Clears all the variables from the workspace of the spyder application."""
-    gl = globals().copy()
-    for var in gl:
-        if var[0] == '_': continue
-        if 'func' in str(globals()[var]): continue
-        if 'module' in str(globals()[var]): continue
-
-        del globals()[var]
-if __name__ == "__main__":
-    clear_all()
-    
-clear_all()
 
 from sys import argv
 from datetime import datetime
@@ -33,13 +18,11 @@ Bx = []; By = []; Bz = []; Bf = []
 Bx = list(np.tile(np.nan,86400))
 By = list(np.tile(np.nan,86400))
 Bz = list(np.tile(np.nan,86400))
-Bf = list(np.tile(np.nan,86400))
 Bh = list(np.tile(np.nan,86400))
 Bd = list(np.tile(np.nan,86400))
 x_mean=np.zeros(1440)
 y_mean=np.zeros(1440)
 z_mean=np.zeros(1440)
-f_mean=np.zeros(1440)
 h_mean=np.zeros(1440)
 d_mean=np.zeros(1440)
 
@@ -101,7 +84,6 @@ try:
             Bx[index] = float(data[6])
             By[index] = float(data[7])
             Bz[index] = float(data[8])
-            Bf[index] = np.sqrt((Bx[index]**2)+(By[index]**2)+(Bz[index]**2))
             Bh[index] = np.sqrt((Bx[index]**2)+(By[index]**2))
             Bd[index] = 60 * np.degrees(np.arcsin(By[index] / Bh[index]))
 
@@ -134,13 +116,9 @@ for k in range(0,1440):
         z_mean[k]=np.nanmean(Bz[(0+(60*k)):((60+(60*k)))])
     else:
         z_mean[k]=99999.00
-    if np.count_nonzero(np.isnan(Bf[(0+(60*k)):((60+(60*k)))])) <= 6:
-        f_mean[k]=np.nanmean(Bf[(0+(60*k)):((60+(60*k)))])
-    else:
-        f_mean[k]=99999.00
 
 #Menyimpan file output
-fileout = stacode[0:3]+str(yyyy)+str(mo).zfill(2)+str(dd).zfill(2)+'pmin'+'.min'
+fileout = stacode[0:3]+str(yyyy)+str(mo).zfill(2)+str(dd).zfill(2)+'.min'
 f_iaga = open(fileout, 'w')
 
 f_iaga.write(' Format                 IAGA-2002                                    |\n')
