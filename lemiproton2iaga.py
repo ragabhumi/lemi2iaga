@@ -135,7 +135,7 @@ for k in range(0,1440):
         z_mean[k]=99999.00
 
 #Menyimpan file output
-fileout = stacode[0:3]+str(yyyy)+str(mo).zfill(2)+str(dd).zfill(2)+'.min'
+fileout = stacode[0:3]+str(yyyy)+str(mo).zfill(2)+str(dd).zfill(2)+'pmin.min'
 f_iaga = open(fileout, 'w')
 
 f_iaga.write(' Format                 IAGA-2002                                    |\n')
@@ -149,7 +149,7 @@ f_iaga.write(' Reported               HDZF                                      
 f_iaga.write(' Sensor Orientation     XYZ                                          |\n')
 f_iaga.write(' Digital Sampling       1 second                                     |\n')
 f_iaga.write(' Data Interval Type     Filtered 1-minute (00:15-01:45)              |\n')
-f_iaga.write(' Data Type              variation                                    |\n')
+f_iaga.write(' Data Type              Provisional                                  |\n')
 f_iaga.write('DATE       TIME         DOY     %sH      %sD      %sZ      %sF   |\n' %(stacode[0:3],stacode[0:3],stacode[0:3],stacode[0:3]))
 
 for j in range(0,1440):
