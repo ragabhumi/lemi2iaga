@@ -20,7 +20,6 @@ By = list(np.tile(np.nan,86400))
 Bz = list(np.tile(np.nan,86400))
 Bh = list(np.tile(np.nan,86400))
 Bd = list(np.tile(np.nan,86400))
-Bf = np.zeros(1440)
 x_mean=np.zeros(1440)
 y_mean=np.zeros(1440)
 z_mean=np.zeros(1440)
@@ -104,22 +103,6 @@ detik = np.tile(range(0,60),1440)
 
 date1 = datetime(year=yyyy,month=mo,day=dd,hour=0,minute=0,second=0)
 
-doy = date1.strftime("%j").zfill(3)
-fileproton = 'STA' + doy + '.PTN'
-try:
-    with open(fileproton) as f_proton:
-        content_proton = f_proton.readlines()
-        for i in range(0,len(content_proton)):
-            data_proton = re.split('\s+|\?',content_proton[i])
-            hp = int(data_proton[1][0:2])
-            mp = int(data_proton[1][2:4])
-            index_proton = (hp*60)+mp
-            Bf[index_proton] = float(data_proton[2])/10
-
-except IOError:
-    print "Proton file does not exist\n"
-    Bf = list(np.tile(88888,1440))
-
 for k in range(0,1440):
     if np.count_nonzero(np.isnan(Bh[(0+(60*k)):((60+(60*k)))])) <= 6:
         h_mean[k]=np.nanmean(Bh[(0+(60*k)):((60+(60*k)))])
@@ -135,7 +118,7 @@ for k in range(0,1440):
         z_mean[k]=99999.00
 
 #Menyimpan file output
-fileout = stacode[0:3]+str(yyyy)+str(mo).zfill(2)+str(dd).zfill(2)+'pmin.min'
+fileout = stacode[0:3]+str(yyyy)+str(mo).zfill(2)+str(dd).zfill(2)+'.min'
 f_iaga = open(fileout, 'w')
 
 f_iaga.write(' Format                 IAGA-2002                                    |\n')
@@ -149,11 +132,11 @@ f_iaga.write(' Reported               HDZF                                      
 f_iaga.write(' Sensor Orientation     XYZ                                          |\n')
 f_iaga.write(' Digital Sampling       1 second                                     |\n')
 f_iaga.write(' Data Interval Type     Filtered 1-minute (00:15-01:45)              |\n')
-f_iaga.write(' Data Type              Provisional                                  |\n')
+f_iaga.write(' Data Type              variation                                    |\n')
 f_iaga.write('DATE       TIME         DOY     %sH      %sD      %sZ      %sF   |\n' %(stacode[0:3],stacode[0:3],stacode[0:3],stacode[0:3]))
 
 for j in range(0,1440):
-    body_iaga = '%s    %9.2f %9.2f %9.2f %9.2f\n' %((date1+timedelta(minutes=j)).strftime("%Y-%m-%d %H:%M:%S.000 %j"),h_mean[j],d_mean[j],z_mean[j],Bf[j])
+    body_iaga = '%s    %9.2f %9.2f %9.2f %9.2f\n' %((date1+timedelta(minutes=j)).strftime("%Y-%m-%d %H:%M:%S.000 %j"),h_mean[j],d_mean[j],z_mean[j],88888)
     f_iaga.write(body_iaga)
 f_iaga.close()
 
